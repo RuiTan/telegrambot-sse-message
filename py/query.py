@@ -10,6 +10,7 @@ from telegraph import Telegraph
     验证当前通知是否已阅读过
 '''
 def validDate(date):
+    print("finish validDate()\n")
     file = open('./py/date.txt', 'r')
     text = file.read()
     if text != "":
@@ -24,6 +25,7 @@ def validDate(date):
     将URL中最大date填入文件，为验证下次通知服务
 '''
 def redefDate(date):
+    print("finish redefDate()\n")
     file = open('./py/date.txt', 'w')
     file.write(str(date))
     file.close
@@ -32,7 +34,15 @@ def redefDate(date):
     写日志文件
 '''
 def writeLog(line):
+    print("finish writeLog()\n")
     file = open('./py/log.txt','a')
+    file.write(line)
+    file.close
+
+def shLog():
+    print("finish shLog()\n")
+    file = open('./py/log.txt','a')
+    line = '\n' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()) + ' : 脚本执行...' + '\n'
     file.write(line)
     file.close
 
@@ -40,6 +50,7 @@ def writeLog(line):
     使用Telegram给RuiRuiBot发通知
 '''
 def sendToBot(jsonData):
+    print("finish sendToBot()\n")
     request = 'https://api.telegram.org/bot797393360:AAEHOlWqDxZUPXD4jT-dpRiLdsPAXV514WM/sendMessage'
     headers = {'content-type' : 'application/json'}
     # data = json.dumps(jsonData)
@@ -73,6 +84,7 @@ def sendToBot(jsonData):
     根据通知生成telegraph界面
 '''
 def getTelegraph(teleData, telegraph):
+    print("finish getTelegraph()\n")
     response = telegraph.create_page(title=teleData["title"],
                          html_content=teleData["content"],
                          author_name=teleData["author"],
@@ -85,13 +97,15 @@ def getTelegraph(teleData, telegraph):
     主函数
 '''
 if __name__ == '__main__':
+    shLog()
+
     doc = pq('http://sse.tongji.edu.cn/Data/List/bkstz')
     chat_id = 438673072
     validMessage = []
     maxDate = 0
     telegraph = Telegraph()
     telegraph.create_account(short_name='Tanrui')
-
+    print("finish read message from sse\n")
     for data in (doc('.data-list>li').items()):
         link = data('a')
         href = link.attr('href')
@@ -126,5 +140,5 @@ if __name__ == '__main__':
 
     for m in validMessage:
         sendToBot(m)
-        
+
     redefDate(maxDate)

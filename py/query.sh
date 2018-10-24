@@ -1,0 +1,1 @@
+/Users/tanrui/anaconda3/bin/python /Users/tanrui/Documents/GitHub/telegrambot/telegrambot-sse-message/py/query.py
